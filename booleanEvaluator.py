@@ -1,10 +1,6 @@
-"""
-current problem:
-    run the program: see how it prints it twice
-    it should only print it once
+import re 
+import time
 
-    line 67: it should make indexes within repeat range get eliminated
-"""
 
 
 """
@@ -12,10 +8,6 @@ take in a boolean expression in the form of a string, if it
 finds an occurance in the larger text (book) that matches
 the boolean expression, then it will print it out
 """
-import re 
-import time
-
-
 class booleanEvaluate:
     exp = ""
     bookOriginal = ""
@@ -29,7 +21,7 @@ class booleanEvaluate:
             return
 
         # setting variables
-        self.exp = expression.lower()
+        self.exp = self.normalize(expression)
         with open(file) as f:
             self.bookOriginal = f.read()
         self.bookLowerCase = self.bookOriginal.lower()
@@ -42,6 +34,19 @@ class booleanEvaluate:
         else:
             print("no instances of that expression found")
 
+
+    """
+    normalize the expressions passed in by the user
+    """
+    def normalize(self, exp):
+        exp = exp.lower()
+        if "(" in exp or ")" in exp:
+            exp = exp.replace("(", " ( ")
+            exp = exp.replace(")", " ) ")
+        return exp
+
+
+
     """
     check for instances of the expression found in the book
     and returns a list of indexes where it found the 
@@ -51,6 +56,7 @@ class booleanEvaluate:
         instancesFound = []
 
         words = self.getWordsToLookFor()
+        print("words: ", words)
 
         # get the index of each word in words into a list
         potentialWordIndexes = []
@@ -58,7 +64,7 @@ class booleanEvaluate:
             temp = [m.start() for m in re.finditer(word, self.bookLowerCase)]
             potentialWordIndexes = potentialWordIndexes + temp
         potentialWordIndexes.sort() # list must be in order for the next step
-
+        
 
         # from that list found in the last step, sort out each redundant index
         # a redudant indexs is an index that is within user defined length range
@@ -73,6 +79,15 @@ class booleanEvaluate:
         # now you have a list without redundant key words, search for matches to
         # the boolean phrase
         for i in wordIndexes:
+
+            ###
+            # words: ['mary', 'jesus']
+            # instances found @: [386706]
+
+            if i ==  386706:
+                pass
+            ###
+
             subString = self.getSubString(i)
             if self.checkExpression(subString):
                 instancesFound.append(i)
@@ -89,11 +104,12 @@ class booleanEvaluate:
         wordsToConsider = self.exp.split()
 
         for word in wordsToConsider:
-            w = word.strip()
+            w = "".join([i for i in word if i.isalpha()])
+
             if w == "" or w == "and" or w == "or":
                 continue
 
-            words.append(word)
+            words.append(w)
         
         if words:
             return words
@@ -168,7 +184,8 @@ class booleanEvaluate:
                             operatorStack: {operatorStack}
                             valueStack: {valueStack}
                             espression: {self.exp}
-                            If this is a bug please report back to Steven""")
+                            If this is a bug please report back to Steven"""
+                        )
 
                     if self.isOnTop(operatorStack, "and"):
                         self.popOperatorApplyToTopTwoStackValues(
@@ -176,7 +193,7 @@ class booleanEvaluate:
                         )
 
                 elif self.isOnTop(operatorStack, "("):
-                    pass
+                    operatorStack.pop()
 
                 else:
                     print(
@@ -185,7 +202,8 @@ class booleanEvaluate:
                         operatorStack: {operatorStack}
                         valueStack: {valueStack}
                         espression: {self.exp}
-                        If this is a bug please report back to Steven""")
+                        If this is a bug please report back to Steven"""
+                    )
 
             else: # string word
                 valueStack.append(t)
@@ -289,11 +307,13 @@ class booleanEvaluate:
 
 start = time.time()
 
+
 file = "Bom.txt"
-expression = "jesus or amen"
+expression = "(adieu and enos) and (adieu and jack)"
 userDefinedLength = 150
 
 b = booleanEvaluate(file, expression, userDefinedLength)
+
 
 end = time.time()
 print("time: ", end - start)
