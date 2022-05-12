@@ -28,6 +28,16 @@
     * a or b and c
     * and is multiply (takes precidence)
     * or is addition 
+    
+## procedure
+    * get the index of all intances of the first 
+    * grab 150 indexes behind and 150 indexes infront of that word
+    * pass that string along to the booleanEvaluator
+    * if it returns a true print
+
+
+
+    
     * verses start with [num: num] use a regex
     * parenthesis are allowed ()
     * do this within a verse, if the boolean function doesn't work within a verse go to the next verse and do the boolean function
