@@ -126,7 +126,7 @@ class booleanEvaluate:
     based on the instances found print off the string
     """
     def printInstances(self, instancesIndex):
-        print("instances found @: ", instancesIndex)
+        print("instances found @: ", len(instancesIndex), instancesIndex)
         for i in instancesIndex:
             subString = self.getSubString(i)
             print("=============")
@@ -309,7 +309,7 @@ start = time.time()
 
 
 file = "Bom.txt"
-expression = "(adieu and enos) and (adieu and jack)"
+expression = "jesus and nephi"
 userDefinedLength = 150
 
 b = booleanEvaluate(file, expression, userDefinedLength)
